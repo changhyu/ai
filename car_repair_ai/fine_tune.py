@@ -31,6 +31,7 @@ def main(dataset_path: str, model_name: str = "gpt2-medium", output_dir: str = "
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets["train"],
+        eval_dataset=tokenized_datasets["validation"],
     )
 
     trainer.train()
