@@ -9,7 +9,10 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, Trainer, TrainingA
 
 def main(dataset_path: str, model_name: str = "gpt2-medium", output_dir: str = "./model"):
     # Load dataset
-    data = load_dataset("json", data_files=dataset_path)
+    raw_datasets = load_dataset("json", data_files=dataset_path)
+    # 훈련/유효성 검사 분할 (예: 90% 훈련, 10% 유효성 검사)
+    data = raw_datasets["train"].train_test_split(test_size=0.1)
+    data["validation"] = data.pop("test")
     
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(model_name)
