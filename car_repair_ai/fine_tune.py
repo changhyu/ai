@@ -15,8 +15,16 @@ def main(dataset_path: str, model_name: str = "gpt2-medium", output_dir: str = "
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name)
 
-    def tokenize_function(example):
-        return tokenizer(example["text"], truncation=True)
+def tokenize_function(example):
+-    # original single‐field tokenization
+-    return tokenizer(example["text"], truncation=True)
++    # build prompt from instruction/response pair if available
++    if "instruction" in example and "response" in example:
++        prompt = example["instruction"] + tokenizer.eos_token + example["response"]
++    else:
++        # fallback to a single text field
++        prompt = example.get("text", "")
++    return tokenizer(prompt, truncation=True)
 
     tokenized_datasets = data.map(tokenize_function, batched=True)
 
