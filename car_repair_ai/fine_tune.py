@@ -16,6 +16,7 @@ def main(dataset_path: str, model_name: str = "gpt2-medium", output_dir: str = "
     
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer.pad_token = tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(model_name)
 
 def tokenize_function(example):
